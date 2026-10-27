@@ -16,7 +16,14 @@ export const skills: SkillGroup[] = [
   },
   {
     title: { en: 'Back-end & database', id: 'Back-end & database' },
-    items: [{ name: 'PHP' }, { name: 'Java' }, { name: 'Node.js' }, { name: 'MySQL' }],
+    items: [{ name: 'PHP' }, { name: 'Java' }, { name: 'Node.js' }, { name: 'MySQL' }, { name: 'SQLite', usedIn: ['skin-time'] }],
+  },
+  {
+    title: { en: 'Mobile (Android)', id: 'Mobile (Android)' },
+    items: [
+      { name: 'Kotlin', usedIn: ['skin-time'] },
+      { name: 'Jetpack Compose', usedIn: ['skin-time'] },
+    ],
   },
   {
     title: { en: 'UI/UX design', id: 'Desain UI/UX' },

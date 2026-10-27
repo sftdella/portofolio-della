@@ -381,6 +381,20 @@
   max-width: 220px;
 }
 
+/* Kelompok berisi screenshot ponsel saja (mis. aplikasi Android) */
+.gallery__grid--phones {
+  grid-template-columns: repeat(auto-fill, minmax(min(170px, 42vw), 1fr));
+  gap: var(--s-5) var(--s-4);
+}
+
+.gallery__grid--phones .gallery__item--tall {
+  max-width: 260px;
+}
+
+.gallery__grid--phones .gallery__thumb {
+  border-radius: var(--radius-lg);
+}
+
 .gallery__thumb {
   position: relative;
   display: block;

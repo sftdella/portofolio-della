@@ -49,8 +49,8 @@ export const strings = {
   },
   projects: {
     intro: {
-      en: 'Two projects, documented honestly: what works today, what is still being built, and how each was verified.',
-      id: 'Dua proyek, didokumentasikan apa adanya: apa yang sudah berjalan, apa yang masih dibangun, dan bagaimana masing-masing diverifikasi.',
+      en: 'Three projects across web and mobile, documented honestly: what works today, what is still being built, and how each was verified.',
+      id: 'Tiga proyek web dan mobile, didokumentasikan apa adanya: apa yang sudah berjalan, apa yang masih dibangun, dan bagaimana masing-masing diverifikasi.',
     },
     demo: { en: 'Live demo', id: 'Demo online' },
     code: { en: 'GitHub', id: 'GitHub' },
@@ -122,8 +122,8 @@ export const strings = {
   meta: {
     title: { en: 'Della Rodhiah — Deyla Studio', id: 'Della Rodhiah — Deyla Studio' },
     description: {
-      en: 'Portfolio of Della Rodhiah — UI/UX designer and web developer. Case studies: RoomCraft 3D and DelLearn LMS.',
-      id: 'Portofolio Della Rodhiah — UI/UX designer dan web developer. Studi kasus: RoomCraft 3D dan DelLearn LMS.',
+      en: 'Portfolio of Della Rodhiah — UI/UX designer and web developer. Case studies: RoomCraft 3D, DelLearn LMS and the Skin Time Android app.',
+      id: 'Portofolio Della Rodhiah — UI/UX designer dan web developer. Studi kasus: RoomCraft 3D, DelLearn LMS, dan aplikasi Android Skin Time.',
     },
   },
 };

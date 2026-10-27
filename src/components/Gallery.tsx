@@ -47,7 +47,7 @@ export function Gallery({ groups }: { groups: Project['gallery'] }) {
       {groups.map((g) => (
         <section key={g.title.en} className="gallery__group" aria-label={t(g.title)}>
           <h3 className="gallery__title">{t(g.title)}</h3>
-          <ul role="list" className="gallery__grid">
+          <ul role="list" className={`gallery__grid${g.shots.every((s) => s.ratio < 1) ? ' gallery__grid--phones' : ''}`}>
             {g.shots.map((s) => (
               <li key={s.src} className={`gallery__item${s.ratio < 1 ? ' gallery__item--tall' : ''}`}>
                 <figure>

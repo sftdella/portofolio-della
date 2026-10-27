@@ -36,9 +36,9 @@ async function emit(input, dir, name) {
 }
 
 const done = [];
-for (const project of ['roomcraft', 'dellearn']) {
+for (const project of ['roomcraft', 'dellearn', 'skintime']) {
   const dir = path.join(SRC, 'screenshots', project);
-  for (const file of (await readdir(dir)).filter((f) => f.endsWith('.jpg'))) {
+  for (const file of (await readdir(dir)).filter((f) => /\.(jpe?g|png)$/i.test(f))) {
     done.push(`${project}/${await emit(sharp(path.join(dir, file)), path.join(OUT, project), path.parse(file).name)}`);
   }
 }
@@ -46,6 +46,28 @@ for (const project of ['roomcraft', 'dellearn']) {
 for (const [project, source, name, region] of CROPS) {
   const input = sharp(path.join(SRC, 'screenshots', project, `${source}.jpg`)).extract(region);
   done.push(`${project}/${await emit(input, path.join(OUT, project), name)}`);
+}
+
+// Sampul Skin Time (16:10): tiga screenshot ASLI dari repository aplikasi, disusun
+// berdampingan di atas latar beige. Isi layar tidak diubah — hanya diperkecil & diberi sudut bulat.
+{
+  const W = 1600, H = 1000, phoneH = 880, phoneW = Math.round(phoneH * (1080 / 2400)), gap = 56;
+  const radius = 34;
+  const mask = Buffer.from(`<svg width="${phoneW}" height="${phoneH}"><rect width="${phoneW}" height="${phoneH}" rx="${radius}" ry="${radius}"/></svg>`);
+  const border = Buffer.from(`<svg width="${phoneW}" height="${phoneH}"><rect x="1" y="1" width="${phoneW - 2}" height="${phoneH - 2}" rx="${radius}" ry="${radius}" fill="none" stroke="#cdbfac" stroke-width="2"/></svg>`);
+  const phone = async (name) =>
+    sharp(path.join(SRC, 'screenshots', 'skintime', `${name}.png`))
+      .resize(phoneW, phoneH)
+      .composite([{ input: mask, blend: 'dest-in' }, { input: border }])
+      .png()
+      .toBuffer();
+  const names = ['home', 'routine-checklist', 'analytics'];
+  const left = Math.round((W - (phoneW * 3 + gap * 2)) / 2);
+  const layers = await Promise.all(
+    names.map(async (n, i) => ({ input: await phone(n), left: left + i * (phoneW + gap), top: Math.round((H - phoneH) / 2) })),
+  );
+  const cover = sharp({ create: { width: W, height: H, channels: 3, background: '#f0e8dc' } }).composite(layers).png();
+  done.push(`skintime/${await emit(sharp(await cover.toBuffer()), path.join(OUT, 'skintime'), 'cover')}`);
 }
 
 // Foto profil: potongan potret 4:5, ditambah versi persegi untuk sampul PDF.

@@ -118,6 +118,7 @@ const P = {
   repo: { en: 'Repository', id: 'Repositori' },
   website: { en: 'Generated from the Deyla Studio portfolio website', id: 'Dibuat dari website portofolio Deyla Studio' },
   screenshots: { en: 'Actual screenshots captured from the public demo.', id: 'Screenshot asli yang diambil dari demo publik.' },
+  noDemo: { en: 'No web demo (Android app)', id: 'Tanpa demo web (aplikasi Android)' },
   links: { en: 'Project links', id: 'Tautan proyek' },
 } satisfies Record<string, L>;
 
@@ -200,8 +201,8 @@ function Dot({ color, filled = true, size = 5 }: { color: string; filled?: boole
   );
 }
 
-function Pill({ tone, label }: { tone: 'live' | 'progress'; label: string }) {
-  const [fg, bg] = tone === 'live' ? [C.verified, C.verifiedBg] : [C.needs, C.needsBg];
+function Pill({ tone, label }: { tone: Project['status']['tone']; label: string }) {
+  const [fg, bg] = { live: [C.verified, C.verifiedBg], progress: [C.needs, C.needsBg], source: [C.dev, C.devBg] }[tone];
   return (
     <View style={[s.row, { alignItems: 'center', gap: 5, alignSelf: 'flex-start', backgroundColor: bg, borderRadius: 10, paddingVertical: 2.5, paddingHorizontal: 8 }]}>
       <Dot color={fg} />
@@ -345,12 +346,12 @@ function OverviewPage({ ctx }: { ctx: Ctx }) {
   return (
     <Frame ctx={ctx} section={ctx.t(P.overview)}>
       <Text style={s.eyebrow}>{ctx.t(strings.sections.projects)}</Text>
-      <Text style={[s.lead, { marginBottom: 20, maxWidth: 420 }]}>{ctx.t(strings.projects.intro)}</Text>
+      <Text style={[s.lead, { marginBottom: 14, maxWidth: 440 }]}>{ctx.t(strings.projects.intro)}</Text>
       {projects.map((p, i) => (
-        <View key={p.slug} style={{ marginBottom: 20, paddingTop: 16, borderTopWidth: 0.75, borderTopColor: C.line }} wrap={false}>
-          <View style={[s.row, { gap: 18 }]}>
-            <View style={{ width: 238, backgroundColor: C.sand, borderRadius: 6, padding: 8 }}>
-              <Image src={ctx.img(i === 0 ? p.gallery[0].shots[0] : p.cover)} style={[s.img, { width: '100%', height: 138 }]} />
+        <View key={p.slug} style={{ marginBottom: 12, paddingTop: 12, borderTopWidth: 0.75, borderTopColor: C.line }} wrap={false}>
+          <View style={[s.row, { gap: 16 }]}>
+            <View style={{ width: 200, backgroundColor: C.sand, borderRadius: 6, padding: 6 }}>
+              <Image src={ctx.img(p.detailCover ?? p.gallery[0].shots[0])} style={[s.img, { width: '100%', height: 117 }]} />
             </View>
             <View style={{ flex: 1 }}>
               <View style={[s.row, { alignItems: 'baseline', gap: 6 }]}>
@@ -359,17 +360,23 @@ function OverviewPage({ ctx }: { ctx: Ctx }) {
                   {ctx.t(p.kind)} · {p.period}
                 </Text>
               </View>
-              <Text style={[s.h2, { fontSize: 18, marginBottom: 0, marginTop: 2 }]}>{p.name}</Text>
-              <Text style={[s.subtitle, { fontSize: 12, marginBottom: 6 }]}>{ctx.t(p.subtitle)}</Text>
+              <View style={[s.row, { alignItems: 'baseline', gap: 8, marginTop: 1, marginBottom: 4 }]}>
+                <Text style={[s.h2, { fontSize: 16, marginBottom: 0 }]}>{p.name}</Text>
+                <Text style={[s.subtitle, { fontSize: 11, marginTop: 0 }]}>{ctx.t(p.subtitle)}</Text>
+              </View>
               <Pill tone={p.status.tone} label={ctx.t(p.status.label)} />
+              <Text style={[s.body, { marginTop: 6, fontSize: 8.8 }]}>{ctx.t(p.summary)}</Text>
             </View>
           </View>
-          <Text style={[s.body, { marginTop: 10, marginBottom: 8 }]}>{ctx.t(p.summary)}</Text>
-          <Chips items={p.tech.map((x) => x.name)} />
-          <View style={[s.row, { gap: 16, marginTop: 9, fontSize: 8.5 }]}>
-            <Link src={p.demoUrl} style={s.link}>
-              {ctx.t(P.demo)}: {p.demoUrl.replace('https://', '')}
-            </Link>
+          <View style={{ marginTop: 7 }}>
+            <Chips items={p.tech.map((x) => x.name)} />
+          </View>
+          <View style={[s.row, { gap: 16, marginTop: 6, fontSize: 8.5 }]}>
+            {p.demoUrl && (
+              <Link src={p.demoUrl} style={s.link}>
+                {ctx.t(P.demo)}: {p.demoUrl.replace('https://', '')}
+              </Link>
+            )}
             <Link src={p.repoUrl} style={s.link}>
               GitHub: {p.repoUrl.replace('https://', '')}
             </Link>
@@ -435,17 +442,20 @@ function CaseStudyPage({ ctx, p }: { ctx: Ctx; p: Project }) {
 }
 
 function ShowcasePage({ ctx, p, shots }: { ctx: Ctx; p: Project; shots: Shot[] }) {
-  const W = (595 - M * 2 - 14) / 2;
+  // Screenshot desktop: 2 kolom (16:10). Screenshot ponsel (potret): 3 kolom dengan rasio aslinya.
+  const phones = shots.every((x) => x.ratio < 1);
+  const W = phones ? 112 : (595 - M * 2 - 14) / 2;
+  const ratio = phones ? shots[0].ratio : 1.6;
   return (
     <Frame ctx={ctx} section={`${p.name} · ${ctx.t(P.showcase)}`}>
       <Text style={s.eyebrow}>{ctx.t(P.showcase)}</Text>
       <Text style={[s.h2, { fontSize: 20 }]}>{p.name}</Text>
-      <Text style={[s.small, { marginBottom: 14 }]}>{ctx.t(P.screenshots)}</Text>
-      <View style={[s.row, { flexWrap: 'wrap', gap: 14 }]}>
+      <Text style={[s.small, { marginBottom: 14 }]}>{ctx.t(p.showcaseNote ?? P.screenshots)}</Text>
+      <View style={[s.row, { flexWrap: 'wrap', gap: phones ? 26 : 14, justifyContent: phones ? 'center' : 'flex-start' }]}>
         {shots.map((shot) => (
           <View key={shot.src} style={{ width: W }} wrap={false}>
-            <View style={{ borderWidth: 0.75, borderColor: C.line, borderRadius: 5, overflow: 'hidden' }}>
-              <Image src={ctx.img(shot)} style={{ width: W - 1.5, height: (W - 1.5) / 1.6, objectFit: 'cover' }} />
+            <View style={{ borderWidth: 0.75, borderColor: C.line, borderRadius: phones ? 9 : 5, overflow: 'hidden' }}>
+              <Image src={ctx.img(shot)} style={{ width: W - 1.5, height: (W - 1.5) / ratio, objectFit: 'cover' }} />
             </View>
             <Text style={[s.small, { marginTop: 4, color: C.inkSoft }]}>{ctx.t(shot.caption)}</Text>
           </View>
@@ -606,9 +616,13 @@ function ContactPage({ ctx }: { ctx: Ctx }) {
       {projects.map((p) => (
         <View key={p.slug} style={[s.row, { paddingVertical: 7, borderBottomWidth: 0.75, borderBottomColor: '#4a4540', gap: 10 }]}>
           <Text style={{ width: 90, fontWeight: 700, fontSize: 10 }}>{p.name}</Text>
-          <Link src={p.demoUrl} style={{ color: C.woodLight, textDecoration: 'none', fontSize: 9, flex: 1 }}>
-            {p.demoUrl.replace('https://', '')}
-          </Link>
+          {p.demoUrl ? (
+            <Link src={p.demoUrl} style={{ color: C.woodLight, textDecoration: 'none', fontSize: 9, flex: 1 }}>
+              {p.demoUrl.replace('https://', '')}
+            </Link>
+          ) : (
+            <Text style={{ color: C.inverseSoft, fontSize: 9, flex: 1 }}>{ctx.t(P.noDemo)}</Text>
+          )}
           <Link src={p.repoUrl} style={{ color: C.woodLight, textDecoration: 'none', fontSize: 9, flex: 1.2 }}>
             {p.repoUrl.replace('https://', '')}
           </Link>
@@ -635,18 +649,21 @@ export function PortfolioDocument({ lang, origin }: { lang: Lang; origin: string
     img: (shot) => `${origin}${shot.src}.jpg`,
     date: new Date().toLocaleDateString(lang === 'id' ? 'id-ID' : 'en-GB', { month: 'long', year: 'numeric' }),
   };
-  const [roomcraft, dellearn] = projects;
-  const rcShots = roomcraft.gallery.flatMap((g) => g.shots).filter((x) => x.ratio === 1.6).slice(0, 6);
-  const dlShots = ['admin-dashboard', 'admin-data-kelas', 'admin-data-peserta', 'admin-modul', 'peserta-pertemuan', 'admin-rekap-nilai']
-    .map((name) => dellearn.gallery.flatMap((g) => g.shots).find((x) => x.src.endsWith(`/${name}`))!)
-    .filter(Boolean);
+  const [roomcraft, dellearn, skinTime] = projects;
+  /** 6 screenshot untuk halaman galeri: daftar `pdfShowcase` bila ada, selain itu 6 pertama di galeri. */
+  const showcase = (p: Project) => {
+    const all = p.gallery.flatMap((g) => g.shots);
+    return p.pdfShowcase
+      ? p.pdfShowcase.map((name) => all.find((x) => x.src.endsWith(`/${name}`))).filter((x): x is Shot => !!x)
+      : all.slice(0, 6);
+  };
 
   return (
     <Document
       title={`${profile.displayName} — ${ctx.t(P.portfolio)} (${profile.brand})`}
       author={profile.fullName}
       subject={ctx.t(profile.headline)}
-      keywords="portfolio, UI/UX, web developer, RoomCraft 3D, DelLearn"
+      keywords="portfolio, UI/UX, web developer, RoomCraft 3D, DelLearn, Skin Time, Android"
       creator={profile.brand}
       producer={profile.brand}
       language={lang === 'id' ? 'id-ID' : 'en-GB'}
@@ -655,13 +672,17 @@ export function PortfolioDocument({ lang, origin }: { lang: Lang; origin: string
       <ProfilePage ctx={ctx} />
       <OverviewPage ctx={ctx} />
       <CaseStudyPage ctx={ctx} p={roomcraft} />
-      <ShowcasePage ctx={ctx} p={roomcraft} shots={rcShots} />
+      <ShowcasePage ctx={ctx} p={roomcraft} shots={showcase(roomcraft)} />
       <ImplementationPage ctx={ctx} p={roomcraft} title={ctx.t(P.implementation)} />
       <FeaturesPage ctx={ctx} p={roomcraft} />
       <CaseStudyPage ctx={ctx} p={dellearn} />
-      <ShowcasePage ctx={ctx} p={dellearn} shots={dlShots} />
+      <ShowcasePage ctx={ctx} p={dellearn} shots={showcase(dellearn)} />
       <ImplementationPage ctx={ctx} p={dellearn} title={ctx.t(P.process)} />
       <FeaturesPage ctx={ctx} p={dellearn} />
+      <CaseStudyPage ctx={ctx} p={skinTime} />
+      <ShowcasePage ctx={ctx} p={skinTime} shots={showcase(skinTime)} />
+      <ImplementationPage ctx={ctx} p={skinTime} title={ctx.t(P.process)} />
+      <FeaturesPage ctx={ctx} p={skinTime} />
       <ContactPage ctx={ctx} />
     </Document>
   );

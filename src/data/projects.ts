@@ -1,7 +1,7 @@
 import type { Project, Shot } from './types';
 
 /*
- * Isi studi kasus diturunkan dari audit (27 Oktober 2026):
+ * Isi studi kasus RoomCraft & DelLearn diturunkan dari audit (27 Oktober 2026):
  *  - RoomCraft 3D: README & source lokal (hanya dibaca) + pengujian fungsi di demo publik
  *    (scripts/verify-roomcraft.mjs). Portofolio mengikuti versi DEMO PUBLIK.
  *  - DelLearn: docs/PERANCANGAN.md, docs/PROGRESS.md, source lokal (hanya dibaca)
@@ -255,6 +255,7 @@ const dellearn: Project = {
   },
   demoUrl: 'https://dellearn-lms.vercel.app/',
   repoUrl: 'https://github.com/sftdella/LMS_DelLearn',
+  pdfShowcase: ['admin-dashboard', 'admin-data-kelas', 'admin-data-peserta', 'admin-modul', 'peserta-pertemuan', 'admin-rekap-nilai'],
   cover: dl('admin-dashboard', DESKTOP,
     ['DelLearn admin dashboard with class, teacher, student and capacity cards and an active classes table', 'Admin dashboard'],
     ['Dashboard admin DelLearn dengan kartu kelas, pengajar, peserta, kapasitas, dan tabel kelas aktif', 'Dashboard admin']),
@@ -456,6 +457,224 @@ const dellearn: Project = {
   ],
 };
 
-export const projects: Project[] = [roomcraft, dellearn];
+/*
+ * Skin Time — audit 27 Oktober 2026 dari salinan lokal repository (hanya dibaca):
+ * C:\Users\Della\AndroidStudioProjects\SkinTime (remote github.com/sftdella/skin-time, Git bersih).
+ * Aplikasi TIDAK dijalankan saat audit (tanpa emulator); fitur diverifikasi dari source code
+ * dan 6 screenshot asli di folder screenshots/ repository. Tidak ada demo/APK publik.
+ */
+const PHONE = 1080 / 2400;
+
+const st = (name: string, en: [string, string], id: [string, string]): Shot => ({
+  src: `/images/skintime/${name}`,
+  ratio: PHONE,
+  alt: { en: en[0], id: id[0] },
+  caption: { en: en[1], id: id[1] },
+});
+
+// Kolase 16:10 berisi tiga screenshot asli (dibuat oleh scripts/optimize-images.mjs).
+const stCover: Shot = {
+  src: '/images/skintime/cover',
+  ratio: 1.6,
+  alt: {
+    en: 'Three Skin Time screens side by side: home with weather and skincare tips, night routine checklist, and analytics',
+    id: 'Tiga layar Skin Time berdampingan: beranda dengan cuaca dan saran skincare, checklist rutinitas malam, dan analytics',
+  },
+  caption: { en: 'Home, routine checklist and analytics', id: 'Beranda, checklist rutinitas, dan analytics' },
+};
+
+const skinTime: Project = {
+  slug: 'skin-time',
+  name: 'Skin Time',
+  subtitle: { en: 'Skincare Routine Companion', id: 'Pendamping Rutinitas Skincare' },
+  kind: { en: 'Android application', id: 'Aplikasi Android' },
+  period: '2026',
+  status: { tone: 'source', label: { en: 'Source on GitHub', id: 'Kode di GitHub' } },
+  summary: {
+    en: 'An Android app for keeping a daily skincare routine: step-by-step morning and night checklists, a calendar of completed sessions, streaks and achievements, plus weather-based skincare tips and a daily reminder.',
+    id: 'Aplikasi Android untuk menjaga rutinitas skincare harian: checklist pagi dan malam langkah demi langkah, kalender sesi yang selesai, streak dan achievement, serta saran perawatan berdasarkan cuaca dan pengingat harian.',
+  },
+  repoUrl: 'https://github.com/sftdella/skin-time',
+  cover: stCover,
+  detailCover: stCover,
+  showcaseNote: {
+    en: 'Actual screenshots from the app, published in its GitHub repository (screenshots/ folder).',
+    id: 'Screenshot asli dari aplikasi, dipublikasikan di repository GitHub-nya (folder screenshots/).',
+  },
+  tech: [
+    { name: 'Kotlin', detail: { en: 'Application language', id: 'Bahasa pemrograman aplikasi' } },
+    { name: 'Jetpack Compose', detail: { en: 'Declarative UI with Material 3', id: 'UI deklaratif dengan Material 3' } },
+    { name: 'Navigation Compose', detail: { en: 'Screen navigation and bottom bar', id: 'Navigasi layar dan bottom bar' } },
+    { name: 'SQLite', detail: { en: 'Local storage via SQLiteOpenHelper (steps, schedules, sessions)', id: 'Penyimpanan lokal lewat SQLiteOpenHelper (step, jadwal, sesi)' } },
+    { name: 'OpenWeatherMap API', detail: { en: 'Current weather and UV index by location', id: 'Cuaca saat ini dan indeks UV berdasarkan lokasi' } },
+    { name: 'AlarmManager', detail: { en: 'Daily reminder notifications, rescheduled after reboot', id: 'Notifikasi pengingat harian, dijadwalkan ulang setelah reboot' } },
+  ],
+  overview: {
+    en: 'Skin Time helps users stick to a skincare routine. Each day they open a Morning or Night session, tick off the steps of their routine, and see their consistency grow on a calendar, a weekly chart and a set of achievements. The home screen adds local weather — temperature, humidity and UV — with simple skincare tips based on those conditions. Built natively for Android 8.0 and up.',
+    id: 'Skin Time membantu pengguna konsisten menjalankan rutinitas skincare. Setiap hari pengguna membuka sesi Morning atau Night, mencentang langkah-langkah rutinitasnya, lalu melihat konsistensinya berkembang lewat kalender, grafik mingguan, dan achievement. Layar beranda menampilkan cuaca setempat — suhu, kelembapan, dan UV — beserta saran skincare sederhana sesuai kondisi tersebut. Dibangun native untuk Android 8.0 ke atas.',
+  },
+  problem: {
+    en: 'A skincare routine only works when it is done consistently, but it is easy to skip steps, forget a session, or lose track of how regular you have been — and the right care can change with the weather.',
+    id: 'Rutinitas skincare hanya bermanfaat bila dilakukan konsisten, tetapi mudah sekali melewatkan langkah, lupa satu sesi, atau tidak tahu seberapa rutin kita selama ini — padahal perawatan yang tepat bisa berubah mengikuti cuaca.',
+  },
+  goals: {
+    en: [
+      'Turn a routine into a clear, step-by-step checklist for morning and night.',
+      'Remind the user at a time they choose.',
+      'Make consistency visible with a calendar, streaks, a weekly chart and achievements.',
+      'Suggest simple skincare tips based on today’s weather.',
+    ],
+    id: [
+      'Mengubah rutinitas menjadi checklist pagi dan malam yang jelas dan bertahap.',
+      'Mengingatkan pengguna pada jam yang dipilih sendiri.',
+      'Menampilkan konsistensi lewat kalender, streak, grafik mingguan, dan achievement.',
+      'Memberi saran skincare sederhana berdasarkan cuaca hari ini.',
+    ],
+  },
+  targetUsers: {
+    en: 'People who want to build and keep a daily skincare habit and prefer a simple, friendly tracker on their Android phone.',
+    id: 'Orang yang ingin membangun dan menjaga kebiasaan skincare harian, dan menginginkan pencatat yang sederhana serta ramah di ponsel Android.',
+  },
+  role: {
+    en: 'Design and Android development — interface, data model, reminders, weather integration and analytics.',
+    id: 'Desain dan pengembangan Android — antarmuka, model data, pengingat, integrasi cuaca, dan analytics.',
+  },
+  roleShort: { en: 'UI design & Android development', id: 'Desain UI & pengembangan Android' },
+  roleItems: {
+    en: [
+      'Designed a soft, friendly interface with a custom Material 3 theme and illustrated icons.',
+      'Modelled routines, steps, schedules and sessions in a local SQLite database.',
+      'Implemented daily reminders with AlarmManager and a boot receiver.',
+      'Connected the OpenWeatherMap API and wrote the rules behind the skincare tips.',
+      'Built the analytics screen: streak, consistency score, weekly chart and achievements.',
+    ],
+    id: [
+      'Merancang antarmuka yang lembut dan ramah dengan tema Material 3 kustom dan ikon ilustrasi.',
+      'Memodelkan rutinitas, step, jadwal, dan sesi di database SQLite lokal.',
+      'Mengimplementasikan pengingat harian dengan AlarmManager dan boot receiver.',
+      'Menghubungkan OpenWeatherMap API dan menyusun aturan di balik saran skincare.',
+      'Membangun layar analytics: streak, skor konsistensi, grafik mingguan, dan achievement.',
+    ],
+  },
+  approach: {
+    en: [
+      'Keep everything on the device: routines and history live in a local SQLite database, so the app works offline (only the weather card needs internet).',
+      'Organise the app around three tabs — Home, Routine and Calendar — with Analytics one tap away.',
+      'Treat a routine as a list of editable steps, so users can add, reorder or mark steps as optional instead of following a fixed template.',
+    ],
+    id: [
+      'Semua data tetap di perangkat: rutinitas dan riwayat tersimpan di database SQLite lokal, sehingga aplikasi tetap berjalan offline (hanya kartu cuaca yang butuh internet).',
+      'Menyusun aplikasi dalam tiga tab — Home, Routine, dan Calendar — dengan Analytics yang bisa dibuka sekali ketuk.',
+      'Memperlakukan rutinitas sebagai daftar step yang bisa diubah, sehingga pengguna bisa menambah, mengurutkan, atau menandai step sebagai opsional, bukan mengikuti templat kaku.',
+    ],
+  },
+  implementation: {
+    en: [
+      'Kotlin with Jetpack Compose and Material 3; Navigation Compose for screens and the bottom bar. Min SDK 26, target SDK 36.',
+      'SQLiteOpenHelper with four tables: checklist steps, activity schedule, routine sessions and session details.',
+      'Weather fetched with HttpURLConnection from OpenWeatherMap using the last known location; if the UV request fails, UV is estimated from the weather code.',
+      'Reminder: an exact alarm fires a notification at the chosen time, then schedules the next day; a boot receiver restores it after a restart.',
+      'Weekly chart drawn with Compose layout primitives — no chart library.',
+      'The OpenWeatherMap API key is read from local.properties at build time, so it never enters the repository.',
+    ],
+    id: [
+      'Kotlin dengan Jetpack Compose dan Material 3; Navigation Compose untuk layar dan bottom bar. Min SDK 26, target SDK 36.',
+      'SQLiteOpenHelper dengan empat tabel: checklist step, jadwal aktivitas, sesi rutinitas, dan detail sesi.',
+      'Cuaca diambil dengan HttpURLConnection dari OpenWeatherMap memakai lokasi terakhir yang diketahui; bila permintaan UV gagal, UV diperkirakan dari kode cuaca.',
+      'Pengingat: alarm tepat waktu memicu notifikasi pada jam yang dipilih, lalu menjadwalkan hari berikutnya; boot receiver memulihkannya setelah perangkat dinyalakan ulang.',
+      'Grafik mingguan digambar dengan komponen layout Compose — tanpa library grafik.',
+      'API key OpenWeatherMap dibaca dari local.properties saat build, sehingga tidak pernah masuk ke repository.',
+    ],
+  },
+  features: [
+    {
+      status: 'verified',
+      items: [
+        { text: { en: 'Morning and Night routine checklists, with optional steps', id: 'Checklist rutinitas Morning dan Night, dengan step opsional' }, source: { en: 'Code + app screenshot', id: 'Kode + screenshot aplikasi' } },
+        { text: { en: 'Add a session: Morning, Night, additional activity or custom routine', id: 'Tambah sesi: Morning, Night, aktivitas tambahan, atau custom routine' }, source: { en: 'Code + app screenshot', id: 'Kode + screenshot aplikasi' } },
+        { text: { en: 'Monthly calendar marking completed days, with session details per date', id: 'Kalender bulanan yang menandai hari selesai, dengan detail sesi per tanggal' }, source: { en: 'Code + app screenshot', id: 'Kode + screenshot aplikasi' } },
+        { text: { en: 'Analytics: streak, active days, total sessions and a 7-day chart', id: 'Analytics: streak, hari aktif, total sesi, dan grafik 7 hari' }, source: { en: 'Code + app screenshot', id: 'Kode + screenshot aplikasi' } },
+        { text: { en: 'Consistency score (“Skin Score”) based on the current streak', id: 'Skor konsistensi (“Skin Score”) berdasarkan streak saat ini' }, source: { en: 'Code + app screenshot', id: 'Kode + screenshot aplikasi' } },
+        { text: { en: 'Seven achievements, e.g. Morning Hero, Night Owl, Hydration Queen', id: 'Tujuh achievement, mis. Morning Hero, Night Owl, Hydration Queen' }, source: { en: 'Code + app screenshot', id: 'Kode + screenshot aplikasi' } },
+        { text: { en: 'Local weather card: temperature, humidity and UV level', id: 'Kartu cuaca setempat: suhu, kelembapan, dan level UV' }, source: { en: 'Code + app screenshot', id: 'Kode + screenshot aplikasi' } },
+        { text: { en: 'Skincare tips that change with temperature, humidity and UV', id: 'Saran skincare yang menyesuaikan suhu, kelembapan, dan UV' }, source: { en: 'Code + app screenshot', id: 'Kode + screenshot aplikasi' } },
+      ],
+    },
+    {
+      status: 'needs-verification',
+      items: [
+        {
+          text: { en: 'Daily reminder notification at a chosen time, restored after reboot', id: 'Notifikasi pengingat harian pada jam pilihan, dipulihkan setelah reboot' },
+          source: { en: 'Implemented in code; not shown in the screenshots or run during this review', id: 'Ada di kode; tidak tampak di screenshot dan tidak dijalankan saat review ini' },
+        },
+        { text: { en: 'Manage checklist steps: add, edit, delete, reorder', id: 'Kelola step checklist: tambah, ubah, hapus, urutkan' }, source: { en: 'Implemented in code', id: 'Ada di kode' } },
+        { text: { en: 'Schedule additional activities (e.g. masks) on chosen days', id: 'Jadwalkan aktivitas tambahan (mis. masker) di hari tertentu' }, source: { en: 'Implemented in code', id: 'Ada di kode' } },
+      ],
+    },
+  ],
+  challenges: {
+    en: [
+      'Getting a location without extra libraries: the app uses the last known location from GPS, network or passive providers, and shows a clear state when no location or permission is available.',
+      'The UV request uses an older OpenWeatherMap endpoint; when it fails the app falls back to an estimate from the weather code.',
+      'Found during the portfolio review: the weather icon is fixed to a sun, so a “Rain” reading still shows a sun, and the captured screen shows “UV Extreme” late at night — the icon and UV source need fixing.',
+      'The “Skin Score” is a consistency score derived from the streak, not a measurement of skin condition — the label should make that clear.',
+    ],
+    id: [
+      'Mendapatkan lokasi tanpa library tambahan: aplikasi memakai lokasi terakhir dari provider GPS, network, atau passive, dan menampilkan keadaan yang jelas bila lokasi atau izin tidak tersedia.',
+      'Permintaan UV memakai endpoint OpenWeatherMap versi lama; bila gagal, aplikasi beralih ke perkiraan dari kode cuaca.',
+      'Ditemukan saat review portofolio: ikon cuaca selalu matahari, sehingga kondisi “Hujan” tetap bergambar matahari, dan layar yang direkam menampilkan “UV Ekstrem” pada larut malam — ikon dan sumber data UV perlu diperbaiki.',
+      '“Skin Score” adalah skor konsistensi yang dihitung dari streak, bukan ukuran kondisi kulit — labelnya perlu memperjelas hal itu.',
+    ],
+  },
+  results: {
+    en: [
+      'A working Android app, shown in six screenshots captured from the app.',
+      'Routines, history and analytics are stored and calculated fully on the device.',
+      'Source code is public on GitHub with setup instructions; the API key stays out of the repository.',
+    ],
+    id: [
+      'Aplikasi Android yang berfungsi, ditunjukkan oleh enam screenshot yang diambil dari aplikasi.',
+      'Rutinitas, riwayat, dan analytics disimpan serta dihitung sepenuhnya di perangkat.',
+      'Source code publik di GitHub beserta petunjuk instalasi; API key tidak ikut masuk repository.',
+    ],
+  },
+  currentStatus: {
+    en: 'Version 1.0 in the repository. The app is not published on Google Play and there is no public APK yet — it can be built and run from Android Studio.',
+    id: 'Versi 1.0 di repository. Aplikasi belum dipublikasikan di Google Play dan belum ada APK publik — aplikasi dapat di-build dan dijalankan dari Android Studio.',
+  },
+  future: {
+    en: [
+      'Weather icons that match the actual condition, and a current UV data source.',
+      'Rename “Skin Score” to make clear it measures consistency.',
+      'Publish a downloadable build (APK or Google Play).',
+      'Automated tests for the database and streak logic.',
+    ],
+    id: [
+      'Ikon cuaca yang sesuai kondisi sebenarnya, dan sumber data UV yang terbaru.',
+      'Mengganti nama “Skin Score” agar jelas bahwa yang diukur adalah konsistensi.',
+      'Menyediakan build yang bisa diunduh (APK atau Google Play).',
+      'Tes otomatis untuk logika database dan streak.',
+    ],
+  },
+  auditNote: {
+    en: 'The app was not run during this review. Features were checked against the source code and the six screenshots in the repository; items marked “implemented in code” have not been seen running.',
+    id: 'Aplikasi tidak dijalankan saat review ini. Fitur diperiksa terhadap source code dan enam screenshot di repository; item bertanda “ada di kode” belum terlihat berjalan.',
+  },
+  gallery: [
+    {
+      title: { en: 'App screens', id: 'Layar aplikasi' },
+      shots: [
+        st('home', ['Home screen with greeting, local weather and skincare recommendations', 'Home — weather & skincare tips'], ['Layar beranda dengan sapaan, cuaca setempat, dan rekomendasi skincare', 'Beranda — cuaca & saran skincare']),
+        st('add-session', ['Bottom sheet to add a Morning, Night, additional or custom session', 'Add a session'], ['Bottom sheet untuk menambah sesi Morning, Night, tambahan, atau custom', 'Tambah sesi']),
+        st('routine-checklist', ['Night routine checklist with completed and optional steps', 'Routine checklist'], ['Checklist rutinitas malam dengan step selesai dan opsional', 'Checklist rutinitas']),
+        st('calendar', ['Monthly calendar with a completed day and its session details', 'Calendar & session history'], ['Kalender bulanan dengan hari selesai dan detail sesinya', 'Kalender & riwayat sesi']),
+        st('analytics', ['Analytics with streak, consistency score and weekly chart', 'Analytics — streak & weekly chart'], ['Analytics dengan streak, skor konsistensi, dan grafik mingguan', 'Analytics — streak & grafik mingguan']),
+        st('achievements', ['Achievement badges and routine statistics', 'Achievements & statistics'], ['Lencana achievement dan statistik rutinitas', 'Achievement & statistik']),
+      ],
+    },
+  ],
+};
+
+export const projects: Project[] = [roomcraft, dellearn, skinTime];
 
 export const getProject = (slug: string | undefined) => projects.find((p) => p.slug === slug);

@@ -1,6 +1,6 @@
 # Deyla Studio — Portofolio Della Rodhiah
 
-Website portofolio dwibahasa (English / Bahasa Indonesia) milik **Seftia Della Fiisyatir Rodhiah** (Della Rodhiah), UI/UX Designer & Web Developer. Website ini menampilkan dua studi kasus, yaitu **RoomCraft 3D** dan **DelLearn LMS**, dan dapat menghasilkan **PDF portofolio** langsung dari browser.
+Website portofolio dwibahasa (English / Bahasa Indonesia) milik **Seftia Della Fiisyatir Rodhiah** (Della Rodhiah), UI/UX Designer & Web Developer. Website ini menampilkan tiga studi kasus, yaitu **RoomCraft 3D**, **DelLearn LMS**, dan aplikasi Android **Skin Time**, dan dapat menghasilkan **PDF portofolio** langsung dari browser.
 
 Website ini dipakai untuk:
 
@@ -19,7 +19,7 @@ Website ini dipakai untuk:
 | Studi kasus | `/projects/roomcraft-3d` dan `/projects/dellearn`, masing-masing dengan 14 bagian (Overview sampai Visual Showcase), daftar isi, dan tautan proyek berikutnya. |
 | Status fitur | Setiap fitur proyek dikelompokkan menjadi *Implemented & verified*, *Implemented, needs verification*, *In development*, atau *Planned*, beserta sumber buktinya. |
 | Galeri | Screenshot asli dari demo publik, dengan lightbox yang bisa dioperasikan lewat keyboard (← → Esc). |
-| PDF portofolio | Tombol **Download portfolio PDF** membuat PDF A4 sebanyak 12 halaman dalam bahasa yang sedang dipilih. Font sama dengan website, link bisa diklik, dan ada nomor halaman. |
+| PDF portofolio | Tombol **Download portfolio PDF** membuat PDF A4 sebanyak 16 halaman dalam bahasa yang sedang dipilih. Font sama dengan website, link bisa diklik, dan ada nomor halaman. |
 | Responsif | Layout khusus untuk ponsel (menu laci, tombol selebar layar, nama tampil lebih dulu), tablet, dan desktop. |
 | Aksesibilitas | Skip link, fokus keyboard yang jelas, `aria-*` pada menu, pengalih bahasa, dan lightbox, teks alt dwibahasa, serta animasi yang mati otomatis bila pengguna memilih *reduced motion*. |
 
@@ -40,7 +40,7 @@ Bagian **Experience** dan **Certifications** sudah disiapkan tetapi saat ini **d
 deyla-portfolio/
 ├── assets-src/                 # Gambar MENTAH (sumber) — tidak ikut di-deploy
 │   ├── profile/della.png
-│   └── screenshots/{roomcraft,dellearn}/*.jpg
+│   └── screenshots/{roomcraft,dellearn,skintime}/*.{jpg,png}
 ├── public/
 │   ├── images/                 # Hasil `npm run images` (WebP untuk web, JPG untuk PDF)
 │   └── favicon.svg
@@ -129,22 +129,28 @@ Foto profil: ganti `assets-src/profile/della.png`, lalu `npm run images`.
 
 Setiap gambar menghasilkan `nama.webp` (1600 px), `nama-sm.webp` (800 px), dan `nama.jpg` (untuk PDF). Potongan khusus seperti `hero-luar` dan `detail-material` diatur di daftar `CROPS` dalam `scripts/optimize-images.mjs`.
 
-> Jangan memakai gambar generatif atau mockup seolah-olah itu screenshot asli. Galeri menyatakan "Actual screenshots captured from the public demo".
+> Jangan memakai gambar generatif atau mockup seolah-olah itu screenshot asli. Galeri menyatakan asal screenshot: "captured from the public demo" secara default, atau teks di `showcaseNote` proyek.
+
+**Skin Time** memakai 6 screenshot asli dari folder `screenshots/` di repository aplikasinya (disalin ke `assets-src/screenshots/skintime/`). Sampulnya (`cover`) adalah kolase tiga screenshot tersebut yang dibuat oleh `npm run images`. Bila screenshot di repository Skin Time diperbarui, salin ulang dengan nama file yang sama lalu jalankan `npm run images`.
 
 ## Menambah proyek
 
-1. Simpan screenshot di `assets-src/screenshots/<nama-proyek>/`, lalu tambahkan nama folder itu ke perulangan `for (const project of [...])` di `scripts/optimize-images.mjs`. Jalankan `npm run images`.
-2. Di `src/data/projects.ts`, buat objek `Project` baru dengan mengikuti `roomcraft` atau `dellearn`. TypeScript akan menandai field yang belum diisi. Isi `features` hanya dengan status yang benar-benar terbukti.
+1. Simpan screenshot (JPG/PNG) di `assets-src/screenshots/<nama-proyek>/`, lalu tambahkan nama folder itu ke perulangan `for (const project of [...])` di `scripts/optimize-images.mjs`. Jalankan `npm run images`.
+2. Di `src/data/projects.ts`, buat objek `Project` baru dengan mengikuti `roomcraft`, `dellearn`, atau `skinTime` (contoh aplikasi mobile). TypeScript akan menandai field yang belum diisi. Isi `features` hanya dengan status yang benar-benar terbukti.
+   - `demoUrl` opsional. Tanpa demo, hanya tombol GitHub yang tampil.
+   - `status.tone`: `live` (demo online), `progress` (dalam pengembangan), atau `source` (kode tersedia, belum dirilis).
+   - Opsional: `detailCover` (gambar besar halaman detail), `showcaseNote` (asal screenshot), `pdfShowcase` (6 screenshot untuk PDF).
+   - Screenshot ponsel (potret) otomatis memakai grid khusus di website dan 3 kolom di PDF.
 3. Tambahkan ke array `projects`. Kartu di beranda, halaman `/projects/<slug>`, daftar isi, galeri, dan tautan "Next project" akan muncul otomatis.
-4. PDF: `PortfolioDocument` saat ini menyusun halaman untuk dua proyek secara eksplisit (fungsi `PortfolioDocument` di bagian bawah file). Tambahkan `CaseStudyPage`, `ShowcasePage`, `ImplementationPage`, dan `FeaturesPage` untuk proyek baru, lalu perbarui angka `12` di `scripts/test-site.mjs`.
+4. PDF: di fungsi `PortfolioDocument` (bagian bawah `src/pdf/PortfolioDocument.tsx`), tambahkan `CaseStudyPage`, `ShowcasePage`, `ImplementationPage`, dan `FeaturesPage` untuk proyek baru. Jumlah halaman yang diharapkan di `scripts/test-site.mjs` (`PDF_PAGES`) mengikuti jumlah proyek, jadi tambahkan juga proyek baru ke `ROUTES`. Halaman ringkasan proyek saat ini muat sampai 3 proyek. Proyek keempat perlu halaman ringkasan kedua.
 
 ## Membuat PDF
 
 - **Dari website:** klik **Download portfolio PDF** (di hero atau bagian Contact). PDF dibuat di browser dalam bahasa yang sedang aktif, dengan nama file `Della-Rodhiah-Portfolio-EN.pdf` atau `…-ID.pdf`.
 - **Untuk lampiran email:** jalankan `npm run build`, `npm run preview`, lalu `npm run test:site`. Kedua versi PDF tersimpan di `test-results/`.
 - Isi PDF diambil dari `src/data/`, sama dengan website, jadi tidak perlu diedit terpisah.
-- Susunan 12 halaman: sampul · profil · ringkasan proyek · RoomCraft (studi kasus, galeri, implementasi, fitur & hasil) · DelLearn (studi kasus, galeri, proses & teknologi, fitur & hasil) · kontak & tautan.
-- Layout PDF ada di `src/pdf/PortfolioDocument.tsx`. Bila teks bertambah panjang, cek jumlah halaman lewat `npm run test:site`. Halaman yang meluap akan terlihat sebagai halaman ke-13.
+- Susunan 16 halaman: sampul · profil · ringkasan proyek · RoomCraft (studi kasus, galeri, implementasi, fitur & hasil) · DelLearn (studi kasus, galeri, proses & teknologi, fitur & hasil) · Skin Time (studi kasus, galeri, proses & teknologi, fitur & hasil) · kontak & tautan.
+- Layout PDF ada di `src/pdf/PortfolioDocument.tsx`. Bila teks bertambah panjang, cek jumlah halaman lewat `npm run test:site`. Halaman yang meluap membuat jumlah halaman melebihi `PDF_PAGES`. Teks versi Bahasa Indonesia biasanya lebih panjang, jadi selalu cek kedua bahasa.
 
 ## Pengujian
 
@@ -163,7 +169,8 @@ npm run test:site          # terminal 2
 - lightbox,
 - tautan internal dan eksternal,
 - halaman 404,
-- unduhan PDF EN dan ID: file `%PDF`, 12 halaman, ada link yang bisa diklik.
+- kartu & halaman detail Skin Time (urutan, tautan hanya ke GitHub, galeri ponsel, catatan sumber screenshot, versi Indonesia),
+- unduhan PDF EN dan ID: file `%PDF`, 16 halaman, ada link yang bisa diklik.
 
 Set `CHECK_EXTERNAL=0` untuk melewati cek tautan eksternal.
 
@@ -204,5 +211,6 @@ Alternatif lewat CLI: `npm i -g vercel`, lalu `vercel` (preview) dan `vercel --p
 - **GitHub tidak bisa diakses dari jaringan saat audit**, sehingga isi repository online tidak dibandingkan langsung. Audit memakai salinan lokal yang remote-nya mengarah ke kedua repository tersebut.
 - **RoomCraft 3D** ditampilkan sesuai **demo publik**: kamar 4 × 3 m, 91 produk. Versi lokal yang lebih baru (kontrol tirai, kamar 3 × 3 m, 100 produk) belum di-commit dan belum dipublikasikan, sehingga ditandai *In development*. Setelah versi baru di-deploy, ambil ulang screenshot dan perbarui `src/data/projects.ts`.
 - **DelLearn** ditampilkan sebagai proyek akademik yang masih dikembangkan: prototipe client-side dengan data contoh, login masih simulasi, dan tidak dipakai sekolah sungguhan.
-- Website ini **tidak menyalin source code** kedua proyek. Hanya screenshot, ringkasan, dan tautan ke repository asli.
+- **Skin Time** diaudit pada 27 Oktober 2026 dari salinan lokal repository (hanya dibaca). Aplikasi **tidak dijalankan**. Fitur diverifikasi dari source code dan 6 screenshot di repository. Fitur yang hanya ada di kode (pengingat, kelola step, jadwal aktivitas) ditandai *needs verification*. Belum ada demo, APK publik, atau rilis Google Play.
+- Website ini **tidak menyalin source code** proyek-proyek tersebut. Hanya screenshot, ringkasan, dan tautan ke repository asli.
 - Tidak ada persentase skill, angka pengguna, atau hasil uji yang dikarang.

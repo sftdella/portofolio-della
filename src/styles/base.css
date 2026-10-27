@@ -317,6 +317,11 @@ button {
   background: var(--st-needs-bg);
 }
 
+.status-pill--source {
+  color: var(--st-dev);
+  background: var(--st-dev-bg);
+}
+
 /* ---------- Animasi masuk (dimatikan bila pengguna memilih reduced motion) ---------- */
 @media (prefers-reduced-motion: no-preference) {
   .reveal {

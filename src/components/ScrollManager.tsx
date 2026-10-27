@@ -1,20 +1,26 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 
 /**
  * Menangani scroll saat berpindah rute:
  * - URL dengan hash (mis. /#projects) → scroll ke elemen tersebut
+ *   (langsung melompat bila datang dari halaman lain; halus bila di halaman yang sama)
  * - rute baru tanpa hash → kembali ke atas
  * Sekaligus mengaktifkan animasi `.reveal` untuk elemen yang masuk viewport.
  */
 export function ScrollManager() {
   const { pathname, hash } = useLocation();
+  const prevPath = useRef(pathname);
 
   useEffect(() => {
+    const samePage = prevPath.current === pathname;
+    prevPath.current = pathname;
     if (hash) {
       // Tunggu render halaman tujuan selesai.
       const id = decodeURIComponent(hash.slice(1));
-      requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView());
+      requestAnimationFrame(() =>
+        document.getElementById(id)?.scrollIntoView({ behavior: samePage ? 'smooth' : 'instant' }),
+      );
     } else {
       window.scrollTo(0, 0);
     }

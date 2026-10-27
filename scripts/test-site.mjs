@@ -14,7 +14,9 @@ const OUT = fileURLToPath(new URL('../test-results/', import.meta.url));
 const CHECK_EXTERNAL = process.env.CHECK_EXTERNAL !== '0';
 await mkdir(OUT, { recursive: true });
 
-const ROUTES = ['/', '/projects/roomcraft-3d', '/projects/dellearn'];
+const ROUTES = ['/', '/projects/roomcraft-3d', '/projects/dellearn', '/projects/skin-time'];
+// Jumlah halaman PDF yang diharapkan: 3 halaman pembuka + 4 per proyek + 1 kontak.
+const PDF_PAGES = 4 + 4 * 3;
 const VIEWPORTS = { desktop: { width: 1440, height: 900 }, laptop: { width: 1024, height: 768 }, tablet: { width: 768, height: 1024 }, mobile: { width: 375, height: 740 } };
 
 const results = [];
@@ -236,6 +238,39 @@ for (const [vpName, vp] of Object.entries(VIEWPORTS)) {
   await context.close();
 }
 
+// 6b. Proyek Skin Time (aplikasi Android, tanpa demo web)
+{
+  const { context, page } = await newPage();
+  await page.goto(BASE + '/', { waitUntil: 'networkidle' });
+  const rows = page.locator('.project-row');
+  const third = rows.nth(2);
+  record('Skin Time', 'Card is the 3rd featured project', (await rows.count()) === 3 && (await third.locator('.project-row__title').textContent()) === 'Skin Time');
+  const thirdText = await third.textContent();
+  record('Skin Time', 'Card shows category, status and verified stack', thirdText.includes('Android application') && thirdText.includes('Source on GitHub') && thirdText.includes('Kotlin') && thirdText.includes('Jetpack Compose'));
+  const links = await third.locator('a[target="_blank"]').evaluateAll((as) => as.map((a) => a.href));
+  record('Skin Time', 'Card links only to the GitHub repo (no fake demo)', links.length === 1 && links[0] === 'https://github.com/sftdella/skin-time', links.join(', '));
+  await third.locator('a.btn--primary').click();
+  await page.waitForURL('**/projects/skin-time');
+  const cs = await page.textContent('main');
+  record('Skin Time', 'Detail page has all case-study sections', ['Project overview', 'Problem', 'Goals', 'Features', 'Technology stack', 'Challenges', 'Current status', 'Future improvements', 'Visual showcase'].every((x) => cs.includes(x)));
+  record('Skin Time', 'Detail page separates verified / needs-verification features', cs.includes('Implemented & verified') && cs.includes('Implemented, needs verification'));
+  const shots = await page.locator('.gallery__grid--phones .gallery__thumb').count();
+  record('Skin Time', 'Gallery shows 6 phone screenshots', shots === 6, `${shots} screenshots`);
+  const note = await page.textContent('#showcase .cs-note');
+  record('Skin Time', 'Gallery note names the repository as the source (not a demo)', note.includes('GitHub repository') && !note.includes('public demo'), note);
+  await page.click('.cs-next__link');
+  await page.waitForURL('**/projects/roomcraft-3d');
+  record('Skin Time', '"Next project" cycles back to RoomCraft 3D', true, page.url());
+  await page.goto(BASE + '/projects/dellearn', { waitUntil: 'networkidle' });
+  await page.click('.cs-next__link');
+  await page.waitForURL('**/projects/skin-time');
+  record('Skin Time', 'DelLearn "Next project" opens Skin Time', true, page.url());
+  await page.click('.lang-switch__btn[lang="id"]');
+  const csId = await page.textContent('main');
+  record('Skin Time', 'Indonesian version of the detail page', csId.includes('Aplikasi Android') && csId.includes('Kode di GitHub') && csId.includes('Pengembangan berikutnya') && !csId.includes('Future improvements'));
+  await context.close();
+}
+
 // 7. Halaman 404
 {
   const { context, page } = await newPage();
@@ -261,7 +296,7 @@ for (const lang of ['en', 'id']) {
   const uris = (buf.toString('latin1').match(/\/URI\s*\(/g) ?? []).length;
   record('PDF', `${lang.toUpperCase()}: button downloads a PDF file`, head === '%PDF-' && buf.length > 50_000,
     `${download.suggestedFilename()} · ${(buf.length / 1024).toFixed(0)} KB · ${((Date.now() - started) / 1000).toFixed(1)} s`);
-  record('PDF', `${lang.toUpperCase()}: 12 A4 pages`, pages === 12, `${pages} pages`);
+  record('PDF', `${lang.toUpperCase()}: ${PDF_PAGES} A4 pages`, pages === PDF_PAGES, `${pages} pages`);
   record('PDF', `${lang.toUpperCase()}: clickable links`, uris >= 10, `${uris} link annotations`);
   record('PDF', `${lang.toUpperCase()}: no errors while generating`, errors.length === 0, errors.join(' | ') || 'none');
   await context.close();

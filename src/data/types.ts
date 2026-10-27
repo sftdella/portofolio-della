@@ -45,11 +45,19 @@ export interface Project {
   subtitle: L;
   kind: L;
   period: string;
-  status: { tone: 'live' | 'progress'; label: L };
+  /** live = demo online · progress = dalam pengembangan · source = kode tersedia, belum dirilis publik */
+  status: { tone: 'live' | 'progress' | 'source'; label: L };
   summary: L;
-  demoUrl: string;
+  /** Kosongkan bila tidak ada demo web (mis. aplikasi Android). */
+  demoUrl?: string;
   repoUrl: string;
   cover: Shot;
+  /** Gambar besar di atas halaman detail; default: screenshot pertama di galeri. */
+  detailCover?: Shot;
+  /** Nama file (tanpa ekstensi) untuk halaman galeri PDF; default: 6 screenshot pertama. */
+  pdfShowcase?: string[];
+  /** Asal screenshot di galeri; default: "diambil dari demo publik". */
+  showcaseNote?: L;
   /** Gambar tambahan di kartu proyek (opsional). */
   coverAlt?: Shot;
   tech: TechItem[];

@@ -105,7 +105,7 @@ export function CaseStudyPage() {
           </div>
 
           <figure className="cs-hero__media">
-            <Picture shot={p.gallery[0].shots[0]} sizes="(min-width: 1240px) 1200px, 96vw" eager />
+            <Picture shot={p.detailCover ?? p.gallery[0].shots[0]} sizes="(min-width: 1240px) 1200px, 96vw" eager />
           </figure>
         </div>
       </header>
@@ -185,7 +185,7 @@ export function CaseStudyPage() {
             <span className="serif cs-block__num">{String(n('showcase')).padStart(2, '0')}</span>
             {title('showcase')}
           </h2>
-          <p className="cs-note">{t(cs.showcaseNote)}</p>
+          <p className="cs-note">{t(p.showcaseNote ?? cs.showcaseNote)}</p>
           <Gallery groups={p.gallery} />
         </div>
       </section>

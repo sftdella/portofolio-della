@@ -1,0 +1,42 @@
+{
+  "name": "deyla-portfolio",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Deyla Studio — bilingual portfolio website of Della Rodhiah with a downloadable PDF portfolio.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview --port 4173",
+    "images": "node scripts/optimize-images.mjs",
+    "capture:roomcraft": "node scripts/capture-roomcraft.mjs",
+    "capture:dellearn": "node scripts/capture-dellearn.mjs",
+    "verify:roomcraft": "node scripts/verify-roomcraft.mjs",
+    "verify:dellearn": "node scripts/verify-dellearn.mjs",
+    "test:site": "node scripts/test-site.mjs"
+  },
+  "dependencies": {
+    "@fontsource/instrument-serif": "^5.3.0",
+    "@fontsource/plus-jakarta-sans": "^5.3.0",
+    "@react-pdf/renderer": "^4.9.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-router-dom": "^7.18.4"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.25.0",
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
+    "@vitejs/plugin-react": "^4.4.1",
+    "eslint": "^9.25.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "globals": "^16.0.0",
+    "playwright-core": "^1.64.1",
+    "sharp": "^0.34.5",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.30.1",
+    "vite": "^6.3.5"
+  }
+}

@@ -1,0 +1,86 @@
+/* Deyla Studio — design tokens
+ * Palet: warm white, beige, charcoal, aksen cokelat kayu.
+ * Kontras teks (WCAG AA) diperiksa terhadap --paper:
+ *   --ink 14.6:1 · --ink-soft 7.4:1 · --muted 4.9:1 · --wood 5.5:1 · --wood-deep 7.6:1
+ */
+:root {
+  /* Warna dasar */
+  --paper: #faf7f2; /* warm white — latar utama */
+  --paper-raised: #fffdf9;
+  --sand: #f0e8dc; /* beige */
+  --sand-deep: #e4d7c4;
+  --line: #e2d8ca;
+  --line-strong: #cdbfac;
+
+  --ink: #26231f; /* charcoal */
+  --ink-soft: #4d4741;
+  --muted: #6b6259;
+  --ink-inverse: #f6f1e9;
+  --ink-inverse-soft: #c9c0b4;
+  --charcoal: #2a2724;
+  --charcoal-deep: #1f1d1b;
+
+  --wood: #8b5a3c; /* aksen cokelat kayu */
+  --wood-deep: #6d4430;
+  --wood-light: #c49a74;
+  --wood-wash: #f3e6d8;
+
+  /* Status fitur */
+  --st-verified: #35664a;
+  --st-verified-bg: #e3ede4;
+  --st-needs: #8a5810;
+  --st-needs-bg: #f6e9d1;
+  --st-dev: #3c5671;
+  --st-dev-bg: #e2e9f0;
+  --st-planned: #5c5752;
+  --st-planned-bg: #ebe7e2;
+
+  /* Tipografi */
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+
+  --fs-xs: 0.78rem;
+  --fs-sm: 0.875rem;
+  --fs-base: 1rem;
+  --fs-md: 1.125rem;
+  --fs-lg: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  --fs-xl: clamp(1.6rem, 1.3rem + 1.2vw, 2.25rem);
+  --fs-2xl: clamp(2rem, 1.5rem + 2.2vw, 3.25rem);
+  --fs-display: clamp(2.75rem, 1.6rem + 5vw, 5.75rem);
+
+  --lh-tight: 1.08;
+  --lh-snug: 1.3;
+  --lh-body: 1.65;
+
+  /* Spasi (kelipatan 4 px) */
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-5: 1.5rem;
+  --s-6: 2rem;
+  --s-7: 3rem;
+  --s-8: 4rem;
+  --s-9: 6rem;
+  --section-y: clamp(4.5rem, 3rem + 6vw, 8rem);
+
+  --gutter: clamp(16px, 4vw, 40px);
+  --container: 1200px;
+  --header-h: 68px;
+
+  --radius-sm: 4px;
+  --radius: 8px;
+  --radius-lg: 14px;
+  --radius-pill: 999px;
+
+  --shadow-sm: 0 1px 2px rgb(38 35 31 / 0.06);
+  --shadow: 0 1px 2px rgb(38 35 31 / 0.05), 0 8px 24px -12px rgb(38 35 31 / 0.18);
+  --shadow-lg: 0 2px 4px rgb(38 35 31 / 0.04), 0 24px 48px -20px rgb(38 35 31 / 0.28);
+
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --dur: 220ms;
+
+  --focus: 0 0 0 3px var(--paper), 0 0 0 5px var(--wood);
+
+  color-scheme: light;
+}

@@ -1,0 +1,334 @@
+/* Reset ringan + tipografi dasar + utilitas bersama */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: calc(var(--header-h) + 16px);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: var(--fs-base);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+ul,
+ol,
+dl,
+dd,
+figure {
+  margin: 0;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  line-height: var(--lh-snug);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+ul[role='list'],
+ol[role='list'] {
+  list-style: none;
+  padding: 0;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: var(--wood-deep);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  color: var(--wood);
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus);
+  border-radius: var(--radius-sm);
+}
+
+::selection {
+  background: var(--wood-light);
+  color: var(--ink);
+}
+
+/* ---------- Utilitas ---------- */
+.container {
+  width: 100%;
+  max-width: calc(var(--container) + var(--gutter) * 2);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 100;
+  padding: var(--s-2) var(--s-4);
+  background: var(--charcoal);
+  color: var(--ink-inverse);
+  border-radius: var(--radius);
+  transform: translateY(-160%);
+  transition: transform var(--dur) var(--ease);
+}
+
+.skip-link:focus-visible {
+  transform: none;
+  color: var(--ink-inverse);
+}
+
+.serif {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+/* Label kecil kapital, dipakai untuk eyebrow & meta */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.eyebrow::before {
+  content: '';
+  width: 28px;
+  height: 1px;
+  background: currentColor;
+}
+
+/* ---------- Tombol ---------- */
+.btn {
+  --btn-bg: transparent;
+  --btn-fg: var(--ink);
+  --btn-border: var(--line-strong);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  min-height: 46px;
+  padding: 0 var(--s-5);
+  border: 1px solid var(--btn-border);
+  border-radius: var(--radius-pill);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background-color var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
+    color var(--dur) var(--ease),
+    transform var(--dur) var(--ease);
+}
+
+.btn:hover {
+  color: var(--btn-fg);
+  border-color: var(--ink);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn[disabled],
+.btn[aria-busy='true'] {
+  cursor: progress;
+  opacity: 0.75;
+}
+
+.btn svg {
+  width: 18px;
+  height: 18px;
+  flex: none;
+}
+
+.btn--primary {
+  --btn-bg: var(--charcoal);
+  --btn-fg: var(--ink-inverse);
+  --btn-border: var(--charcoal);
+}
+
+.btn--primary:hover {
+  --btn-bg: var(--charcoal-deep);
+  border-color: var(--charcoal-deep);
+}
+
+.btn--wood {
+  --btn-bg: var(--wood);
+  --btn-fg: #fffaf3;
+  --btn-border: var(--wood);
+}
+
+.btn--wood:hover {
+  --btn-bg: var(--wood-deep);
+  border-color: var(--wood-deep);
+}
+
+.btn--ghost {
+  --btn-border: transparent;
+  padding-inline: var(--s-3);
+}
+
+.btn--ghost:hover {
+  border-color: transparent;
+  text-decoration: underline;
+}
+
+.btn--sm {
+  min-height: 38px;
+  padding: 0 var(--s-4);
+  font-size: var(--fs-xs);
+}
+
+/* Tombol di atas latar gelap */
+.on-dark .btn {
+  --btn-fg: var(--ink-inverse);
+  --btn-border: rgb(246 241 233 / 0.35);
+}
+
+.on-dark .btn:hover {
+  border-color: var(--ink-inverse);
+}
+
+.on-dark .btn--wood {
+  --btn-bg: var(--wood-light);
+  --btn-fg: var(--charcoal-deep);
+  --btn-border: var(--wood-light);
+}
+
+.on-dark .btn--wood:hover {
+  --btn-bg: #d6b18f;
+  border-color: #d6b18f;
+}
+
+.on-dark :focus-visible {
+  box-shadow: 0 0 0 3px var(--charcoal), 0 0 0 5px var(--wood-light);
+}
+
+/* ---------- Chip & status ---------- */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--paper-raised);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  color: var(--ink-soft);
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px 4px 10px;
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-pill::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.status-pill--live {
+  color: var(--st-verified);
+  background: var(--st-verified-bg);
+}
+
+.status-pill--progress {
+  color: var(--st-needs);
+  background: var(--st-needs-bg);
+}
+
+/* ---------- Animasi masuk (dimatikan bila pengguna memilih reduced motion) ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal {
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity 700ms var(--ease),
+      transform 700ms var(--ease);
+  }
+
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+}
